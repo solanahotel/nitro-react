@@ -12,6 +12,7 @@ import { CatalogLayoutPets3View } from './CatalogLayoutPets3View';
 import { CatalogLayoutRoomAdsView } from './CatalogLayoutRoomAdsView';
 import { CatalogLayoutRoomBundleView } from './CatalogLayoutRoomBundleView';
 import { CatalogLayoutSingleBundleView } from './CatalogLayoutSingleBundleView';
+import { CatalogLayoutSolanaClubView } from './CatalogLayoutSolanaClubView';
 import { CatalogLayoutSoundMachineView } from './CatalogLayoutSoundMachineView';
 import { CatalogLayoutSpacesView } from './CatalogLayoutSpacesView';
 import { CatalogLayoutTrophiesView } from './CatalogLayoutTrophiesView';
@@ -42,6 +43,8 @@ export const GetCatalogLayout = (page: ICatalogPage, hideNavigation: () => void)
             return <CatalogLayoutPets3View { ...layoutProps } />;
         case 'vip_buy':
             return <CatalogLayoutVipBuyView { ...layoutProps } />;
+        case 'solana_club_buy':
+            return <CatalogLayoutSolanaClubView { ...layoutProps } />;
         case 'guild_frontpage':
             return <CatalogLayouGuildFrontpageView { ...layoutProps } />;
         case 'guild_forum':

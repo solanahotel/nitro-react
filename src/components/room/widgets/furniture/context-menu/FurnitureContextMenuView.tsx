@@ -30,10 +30,10 @@ export const FurnitureContextMenuView: FC<{}> = props =>
                 simpleAlert(LocalizeText('costumehopper.costumerequired.bodytext'), null, 'catalog/open/temporary_effects' , LocalizeText('costumehopper.costumerequired.buy'), LocalizeText('costumehopper.costumerequired.header'), null);
                 break;
             case 2:
-                simpleAlert(LocalizeText('viphopper.viprequired.bodytext'), null, 'catalog/open/habbo_club' , LocalizeText('viprequired.buy.vip'), LocalizeText('viprequired.header'), null);
+                simpleAlert(LocalizeText('viphopper.viprequired.bodytext'), null, 'catalog/open/solana_club' , LocalizeText('viprequired.buy.vip'), LocalizeText('viprequired.header'), null);
                 break;
             case 3:
-                simpleAlert(LocalizeText('gate.viprequired.bodytext'), null, 'catalog/open/habbo_club' , LocalizeText('viprequired.buy.vip'), LocalizeText('gate.viprequired.title'), null);
+                simpleAlert(LocalizeText('gate.viprequired.bodytext'), null, 'catalog/open/solana_club' , LocalizeText('viprequired.buy.vip'), LocalizeText('gate.viprequired.title'), null);
                 break;
         }
     });

@@ -1,3 +1,4 @@
+export * from './solana';
 export * from './achievements';
 export * from './avatar';
 export * from './camera';
