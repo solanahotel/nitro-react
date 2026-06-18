@@ -4,6 +4,10 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+    // Client is served from a subpath (/client/nitro/nitro-react/dist/), not the
+    // web root. Relative base makes the built asset URLs resolve correctly there
+    // instead of pointing at the site root (which 404s -> white screen).
+    base: './',
     plugins: [ react() ],
     resolve: {
         alias: {
