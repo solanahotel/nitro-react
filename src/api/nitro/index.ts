@@ -10,6 +10,7 @@ export * from './GetLocalization';
 export * from './GetNitroInstance';
 export * from './OpenUrl';
 export * from './RemoveLinkEventTracker';
+export * from './RoomItemDeleteComposer';
 export * from './room';
 export * from './SendMessageComposer';
 export * from './session';

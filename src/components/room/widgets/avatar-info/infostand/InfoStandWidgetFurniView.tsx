@@ -1,7 +1,7 @@
 import { CrackableDataType, GroupInformationComposer, GroupInformationEvent, NowPlayingEvent, RoomControllerLevel, RoomObjectCategory, RoomObjectOperationType, RoomObjectVariable, RoomWidgetEnumItemExtradataParameter, RoomWidgetFurniInfoUsagePolicyEnum, SetObjectDataMessageComposer, SongInfoReceivedEvent, StringDataType } from '@nitrots/nitro-renderer';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
-import { AvatarInfoFurni, CreateLinkEvent, GetGroupInformation, GetNitroInstance, GetRoomEngine, LocalizeText, SendMessageComposer } from '../../../../../api';
+import { AvatarInfoFurni, CreateLinkEvent, EnsureRoomItemDeleteComposerRegistered, GetGroupInformation, GetNitroInstance, GetRoomEngine, LocalizeText, RoomItemDeleteComposer, SendMessageComposer } from '../../../../../api';
 import { Base, Button, Column, Flex, LayoutBadgeImageView, LayoutLimitedEditionCompactPlateView, LayoutRarityLevelView, Text, UserProfileIconView } from '../../../../../common';
 import { useMessageEvent, useRoom, useSoundEvent } from '../../../../../hooks';
 
@@ -281,6 +281,13 @@ export const InfoStandWidgetFurniView: FC<InfoStandWidgetFurniViewProps> = props
             case 'use':
                 GetRoomEngine().useRoomObject(avatarInfo.id, avatarInfo.category);
                 break;
+            case 'delete':
+                if(!window.confirm('Permanently delete "' + (avatarInfo.name || 'this item') + '" from the game?\n\nThis cannot be undone — the item is destroyed, not returned to inventory.')) break;
+
+                if(!EnsureRoomItemDeleteComposerRegistered()) break;
+
+                SendMessageComposer(new RoomItemDeleteComposer(avatarInfo.id));
+                break;
             case 'save_branding_configuration': {
                 const mapData = new Map<string, string>();
                 const dataParts = getFurniSettingsAsString().split('\t');
@@ -454,6 +461,10 @@ export const InfoStandWidgetFurniView: FC<InfoStandWidgetFurniViewProps> = props
                 { (pickupMode !== PICKUP_MODE_NONE) &&
                     <Button variant="dark" onClick={ event => processButtonAction('pickup') }>
                         { LocalizeText((pickupMode === PICKUP_MODE_EJECT) ? 'infostand.button.eject' : 'infostand.button.pickup') }
+                    </Button> }
+                { avatarInfo.isAnyRoomController &&
+                    <Button variant="danger" onClick={ event => processButtonAction('delete') }>
+                        Delete
                     </Button> }
                 { canUse &&
                     <Button variant="dark" onClick={ event => processButtonAction('use') }>
