@@ -95,7 +95,7 @@ export const CatalogLayoutSolanaClubView: FC<CatalogLayoutProps> = props =>
                         <Column justifyContent="end" gap={ 0 }>
                             <Text textEnd bold>{ pkg.name }</Text>
                             <Flex justifyContent="end" gap={ 1 }>
-                                <Text textEnd>${ pkg.price_usd }{ pkg.sol ? ` · ${ pkg.sol } SOL` : '' }</Text>
+                                <Text textEnd>${ pkg.price_usd }</Text>
                             </Flex>
                         </Column>
                         <Button variant="success" disabled={ busy } onClick={ () => buy(pkg) }>Buy</Button>

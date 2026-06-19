@@ -22,7 +22,7 @@ export const CatalogGiftView: FC<{}> = props =>
     const [ maxBoxIndex, setMaxBoxIndex ] = useState<number>(0);
     const [ maxRibbonIndex, setMaxRibbonIndex ] = useState<number>(0);
     const [ receiverNotFound, setReceiverNotFound ] = useState<boolean>(false);
-    const { catalogOptions = null } = useCatalog();
+    const { catalogOptions = null, currentOffer = null } = useCatalog();
     const { friends } = useFriends();
     const { giftConfiguration = null } = catalogOptions;
     const [ boxTypes, setBoxTypes ] = useState<number[]>([]);
@@ -249,12 +249,12 @@ export const CatalogGiftView: FC<{}> = props =>
                             <Column gap={ 1 }>
                                 <Text fontWeight="bold">{ LocalizeText(boxName) }</Text>
                                 <Flex alignItems="center" gap={ 1 }>
-                                    { LocalizeText(priceText, [ 'price' ], [ giftConfiguration.price.toString() ]) }
+                                    { (currentOffer?.priceInCredits ?? 0).toString() }
                                     <LayoutCurrencyIcon type={ -1 } />
                                 </Flex>
                             </Column>
                         </Flex>
-                        <Flex alignItems="center" gap={ 2 } className={ isColorable ? '' : 'opacity-50 pointer-events-none' }>
+                        <Flex alignItems="center" gap={ 2 }>
                             <ButtonGroup>
                                 <Button variant="primary" onClick={ () => handleAction('prev_ribbon') }>
                                     <FaChevronLeft className="fa-icon" />
