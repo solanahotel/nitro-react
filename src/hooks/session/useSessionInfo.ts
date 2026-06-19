@@ -1,4 +1,4 @@
-import { FigureUpdateEvent, RoomUnitChatStyleComposer, UserInfoDataParser, UserInfoEvent, UserSettingsEvent } from '@nitrots/nitro-renderer';
+import { FigureUpdateEvent, GetSoundSettingsComposer, RoomUnitChatStyleComposer, UserInfoDataParser, UserInfoEvent, UserSettingsEvent } from '@nitrots/nitro-renderer';
 import { useEffect, useState } from 'react';
 import { useBetween } from 'use-between';
 import { GetLocalStorage, GetSessionDataManager, SendMessageComposer } from '../../api';
@@ -58,6 +58,13 @@ const useSessionInfoState = () =>
 
         setChatStyleId(parser.chatType);
     });
+
+    useEffect(() =>
+    {
+        // Request the user's settings (sound volumes, old chat, etc.) so the settings cog
+        // can open — nothing else sends this, so without it userSettings stays null.
+        SendMessageComposer(new GetSoundSettingsComposer());
+    }, []);
 
     useEffect(() =>
     {
