@@ -1,4 +1,4 @@
-import { RoomDeleteComposer, RoomSettingsSaveErrorEvent, RoomSettingsSaveErrorParser } from '@nitrots/nitro-renderer';
+import { GetUserFlatCatsMessageComposer, RoomDeleteComposer, RoomSettingsSaveErrorEvent, RoomSettingsSaveErrorParser } from '@nitrots/nitro-renderer';
 import { FC, useEffect, useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { CreateLinkEvent, GetMaxVisitorsList, IRoomData, LocalizeText, SendMessageComposer } from '../../../../api';
@@ -28,6 +28,14 @@ export const NavigatorRoomSettingsBasicTabView: FC<NavigatorRoomSettingsTabViewP
     const [ typeError, setTypeError ] = useState<string>('');
     const { showConfirm = null } = useNotification();
     const { categories = null } = useNavigator();
+
+    // Fallback room categories (ids match the room_categories table) so the dropdown is always
+    // populated even if the server's flat-cats packet hasn't arrived / parsed.
+    const FALLBACK_CATEGORIES = [
+        { id: 1, name: 'Chatting' }, { id: 2, name: 'Trading' }, { id: 3, name: 'Games' },
+        { id: 5, name: 'Roleplaying' }, { id: 8, name: 'Events' },
+    ];
+    const categoryList = (categories && categories.length && categories[0]?.name) ? categories : FALLBACK_CATEGORIES;
 
     useMessageEvent<RoomSettingsSaveErrorEvent>(RoomSettingsSaveErrorEvent, event =>
     {
@@ -90,6 +98,11 @@ export const NavigatorRoomSettingsBasicTabView: FC<NavigatorRoomSettingsTabViewP
 
     useEffect(() =>
     {
+        if(!categories || !categories.length) SendMessageComposer(new GetUserFlatCatsMessageComposer());
+    }, [ categories ]);
+
+    useEffect(() =>
+    {
         setRoomName(roomData.roomName);
         setRoomDescription(roomData.roomDescription);
         setRoomTag1((roomData.tags.length > 0 && roomData.tags[0]) ? roomData.tags[0] : '');
@@ -115,7 +128,7 @@ export const NavigatorRoomSettingsBasicTabView: FC<NavigatorRoomSettingsTabViewP
             <Flex alignItems="center" gap={ 1 }>
                 <Text className="col-3">{ LocalizeText('navigator.category') }</Text>
                 <select className="form-select form-select-sm" value={ roomData.categoryId } onChange={ event => handleChange('category', event.target.value) }>
-                    { categories && categories.map(category => <option key={ category.id } value={ category.id }>{ LocalizeText(category.name) }</option>) }
+                    { categoryList.map(category => <option key={ category.id } value={ category.id }>{ LocalizeText(category.name) }</option>) }
                 </select>
             </Flex>
             <Flex alignItems="center" gap={ 1 }>
@@ -131,31 +144,6 @@ export const NavigatorRoomSettingsBasicTabView: FC<NavigatorRoomSettingsTabViewP
                     <option value="1">{ LocalizeText('navigator.roomsettings.trade_not_with_Controller') }</option>
                     <option value="2">{ LocalizeText('navigator.roomsettings.trade_allowed') }</option>
                 </select>
-            </Flex>
-            <Flex alignItems="center" gap={ 1 }>
-                <Text className="col-3">{ LocalizeText('navigator.tags') }</Text>
-                <Column fullWidth gap={ 0 }>
-                    <input className="form-control form-control-sm" value={ roomTag1 } onChange={ event => setRoomTag1(event.target.value) } onBlur={ () => saveTags(0) } />
-                    { (roomTag1.length > TAGS_MAX_LENGTH) &&
-                        <Text bold small variant="danger">
-                            { LocalizeText('navigator.roomsettings.toomanycharacters') }
-                        </Text> }
-                    { (tagIndex === 0 && typeError != '') &&
-                        <Text bold small variant="danger">
-                            { LocalizeText(typeError) }
-                        </Text> }
-                </Column>
-                <Column fullWidth gap={ 0 }>
-                    <input className="form-control form-control-sm" value={ roomTag2 } onChange={ event => setRoomTag2(event.target.value) } onBlur={ () => saveTags(1) } />
-                    { (roomTag2.length > TAGS_MAX_LENGTH) &&
-                        <Text bold small variant="danger">
-                            { LocalizeText('navigator.roomsettings.toomanycharacters') }
-                        </Text> }
-                    { (tagIndex === 1 && typeError != '') &&
-                    <Text bold small variant="danger">
-                        { LocalizeText(typeError) }
-                    </Text> }
-                </Column>
             </Flex>
             <Flex alignItems="center" gap={ 1 }>
                 <Base className="col-3" />

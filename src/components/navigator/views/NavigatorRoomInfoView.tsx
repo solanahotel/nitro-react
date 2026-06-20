@@ -78,7 +78,9 @@ export const NavigatorRoomInfoView: FC<NavigatorRoomInfoViewProps> = props =>
                 CreateLinkEvent('floor-editor/toggle');
                 return;
             case 'report_room':
-                report(ReportType.ROOM, { roomId: navigatorData.enteredGuestRoom.roomId, roomName: navigatorData.enteredGuestRoom.roomName });
+                // Reporting a room now opens a support ticket (pre-filled) instead of the old CFH flow.
+                CreateLinkEvent('help/report-room/' + navigatorData.enteredGuestRoom.roomId + '/' + encodeURIComponent(navigatorData.enteredGuestRoom.roomName));
+                onCloseClick();
                 return;
             case 'close':
                 onCloseClick();
@@ -105,9 +107,7 @@ export const NavigatorRoomInfoView: FC<NavigatorRoomInfoViewProps> = props =>
                 { navigatorData.enteredGuestRoom &&
                     <>
                         <Flex gap={ 2 } overflow="hidden">
-                            <LayoutRoomThumbnailView roomId={ navigatorData.enteredGuestRoom.roomId } customUrl={ navigatorData.enteredGuestRoom.officialRoomPicRef }>
-                                { hasPermission('settings') && <i className="icon icon-camera-small position-absolute b-0 r-0 m-1 cursor-pointer top-0" onClick={ () => processAction('open_room_thumbnail_camera') } /> }
-                            </LayoutRoomThumbnailView>
+                            <LayoutRoomThumbnailView roomId={ navigatorData.enteredGuestRoom.roomId } customUrl={ navigatorData.enteredGuestRoom.officialRoomPicRef } />
                             <Column grow gap={ 1 } overflow="hidden">
                                 <Flex gap={ 1 }>
                                     <Column grow gap={ 1 }>
@@ -164,11 +164,8 @@ export const NavigatorRoomInfoView: FC<NavigatorRoomInfoViewProps> = props =>
                                 <Button onClick={ () => processAction('toggle_mute') }>
                                     { LocalizeText(isRoomMuted ? 'navigator.muteall_on' : 'navigator.muteall_off') }
                                 </Button>
-                                <Button onClick={ () => processAction('room_filter') }>
-                                    { LocalizeText('navigator.roomsettings.roomfilter') }
-                                </Button>
-                                <Button onClick={ () => processAction('open_floorplan_editor') }>
-                                    { LocalizeText('open.floor.plan.editor') }
+                                <Button onClick={ () => processAction('open_room_settings') }>
+                                    Room Settings
                                 </Button>
                             </> }
                         </Column>

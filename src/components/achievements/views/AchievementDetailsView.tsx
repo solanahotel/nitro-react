@@ -29,7 +29,7 @@ export const AchievementDetailsView: FC<AchievementDetailsViewProps> = props =>
                         { LocalizeBadgeName(AchievementUtilities.getAchievementBadgeCode(achievement)) }
                     </Text>
                     <Text textBreak>
-                        { LocalizeBadgeDescription(AchievementUtilities.getAchievementBadgeCode(achievement)) }
+                        { LocalizeBadgeDescription(AchievementUtilities.getAchievementBadgeCode(achievement)).replace(/%limit%/g, achievement.scoreLimit.toString()) }
                     </Text>
                 </Column>
                 { ((achievement.levelRewardPoints > 0) || (achievement.scoreLimit > 0)) &&

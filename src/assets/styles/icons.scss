@@ -24,9 +24,59 @@
     }
 
     &.icon-catalog {
+        background-image: url('@/assets/images/toolbar/icons/marketplace.png');
+        width: 32px;
+        height: 31px;
+        image-rendering: pixelated;
+    }
+
+    &.icon-marketplace {
         background-image: url('@/assets/images/toolbar/icons/catalog.png');
         width: 37px;
         height: 36px;
+    }
+
+    &.icon-inbox {
+        background-image: url('@/assets/images/toolbar/icons/message.png');
+        width: 32px;
+        height: 31px;
+        image-rendering: pixelated;
+    }
+
+    &.icon-wheel {
+        background-image: url('@/assets/images/toolbar/icons/wheel.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 32px;
+        height: 31px;
+    }
+
+    &.icon-quests {
+        background-image: url('@/assets/images/toolbar/icons/quests.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 32px;
+        height: 31px;
+    }
+
+    &.icon-help-q {
+        background-image: url('@/assets/images/toolbar/icons/help-question.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 32px;
+        height: 31px;
+    }
+
+    &.icon-me-help {
+        background-image: url('@/assets/images/toolbar/icons/help-question.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 22px;
+        height: 22px;
     }
 
     &.icon-game {
@@ -88,9 +138,12 @@
     }
 
     &.icon-me-helper-tool {
-        background-image: url('@/assets/images/toolbar/icons/me-menu/helper-tool.png');
-        width: 32px;
-        height: 30px;
+        background-image: url('@/assets/images/toolbar/icons/help-question.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 22px;
+        height: 22px;
     }
 
     &.icon-me-profile {
@@ -120,6 +173,15 @@
     &.icon-me-clothing {
         background-image: url('@/assets/images/toolbar/icons/me-menu/clothing.png');
         width: 27px;
+        height: 30px;
+    }
+
+    &.icon-me-effects {
+        background-image: url('@/assets/images/toolbar/icons/me-menu/effects.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 28px;
         height: 30px;
     }
 
@@ -625,5 +687,23 @@
         to {
             transform: rotate(360deg);
         }
+    }
+}
+
+@keyframes wheel-rotate {
+    from { transform: rotate(0); }
+    to { transform: rotate(360deg); }
+}
+
+.wheel-image {
+    background-image: url('@/assets/images/toolbar/icons/wheel.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 110px;
+    height: 110px;
+
+    &.spinning {
+        animation: wheel-rotate 0.65s linear infinite;
     }
 }

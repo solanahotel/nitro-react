@@ -2,15 +2,15 @@ import { FriendlyTime, HabboClubLevelEnum } from '@nitrots/nitro-renderer';
 import { FC, useMemo } from 'react';
 import { CreateLinkEvent, GetConfiguration, LocalizeText } from '../../api';
 import { Column, Flex, Grid, LayoutCurrencyIcon, Text } from '../../common';
-import { usePurse } from '../../hooks';
+import { usePurse, useWalletBalances } from '../../hooks';
 import { CurrencyView } from './views/CurrencyView';
-import { SeasonalView } from './views/SeasonalView';
+import { WalletCurrencyView } from './views/WalletCurrencyView';
 
 export const PurseView: FC<{}> = props =>
 {
     const { purse = null, hcDisabled = false } = usePurse();
+    const { sol = null, hotel = null } = useWalletBalances();
 
-    const displayedCurrencies = useMemo(() => GetConfiguration<number[]>('system.currency.types', []), []);
     const currencyDisplayNumberShort = useMemo(() => GetConfiguration<boolean>('currency.display.number.short', false), []);
 
     const getClubText = (() =>
@@ -27,38 +27,6 @@ export const PurseView: FC<{}> = props =>
         else return FriendlyTime.shortFormat(totalDays * 86400);
     })();
 
-    const getCurrencyElements = (offset: number, limit: number = -1, seasonal: boolean = false) =>
-    {
-        if(!purse || !purse.activityPoints || !purse.activityPoints.size) return null;
-
-        const types = Array.from(purse.activityPoints.keys()).filter(type => (displayedCurrencies.indexOf(type) >= 0));
-
-        let count = 0;
-
-        while(count < offset)
-        {
-            types.shift();
-
-            count++;
-        }
-
-        count = 0;
-
-        const elements: JSX.Element[] = [];
-
-        for(const type of types)
-        {
-            if((limit > -1) && (count === limit)) break;
-
-            if(seasonal) elements.push(<SeasonalView key={ type } type={ type } amount={ purse.activityPoints.get(type) } />);
-            else elements.push(<CurrencyView key={ type } type={ type } amount={ purse.activityPoints.get(type) } short={ currencyDisplayNumberShort } />);
-
-            count++;
-        }
-
-        return elements;
-    }
-
     if(!purse) return null;
 
     return (
@@ -67,7 +35,7 @@ export const PurseView: FC<{}> = props =>
                 <Grid fullWidth gap={ 1 }>
                     <Column justifyContent="center" size={ hcDisabled ? 10 : 6 } gap={ 0 }>
                         <CurrencyView type={ -1 } amount={ purse.credits } short={ currencyDisplayNumberShort } />
-                        { getCurrencyElements(0, 2) }
+                        <WalletCurrencyView kind="sol" amount={ sol } />
                     </Column>
                     { !hcDisabled &&
                         <Column center pointer size={ 4 } gap={ 1 } className="nitro-purse-subscription rounded" onClick={ event => CreateLinkEvent('habboUI/open/hccenter') }>
@@ -84,7 +52,7 @@ export const PurseView: FC<{}> = props =>
                     </Column>
                 </Grid>
             </Flex>
-            { getCurrencyElements(2, -1, true) }
+            <WalletCurrencyView kind="hotel" amount={ hotel } />
         </Column>
     );
 }

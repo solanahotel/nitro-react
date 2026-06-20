@@ -2,7 +2,7 @@ import { Dispose, DropBounce, EaseOut, JumpBy, Motions, NitroToolbarAnimateIconE
 import { FC, useState } from 'react';
 import { CreateLinkEvent, GetConfiguration, GetSessionDataManager, MessengerIconState, OpenMessengerChat, VisitDesktop } from '../../api';
 import { Base, Flex, LayoutAvatarImageView, LayoutItemCountView, TransitionAnimation, TransitionAnimationTypes } from '../../common';
-import { useAchievements, useFriends, useInventoryUnseenTracker, useMessageEvent, useMessenger, useRoomEngineEvent, useSessionInfo } from '../../hooks';
+import { useAchievements, useFriends, useInbox, useInventoryUnseenTracker, useMessageEvent, useMessenger, useRoomEngineEvent, useSessionInfo } from '../../hooks';
 import { ToolbarMeView } from './ToolbarMeView';
 
 export const ToolbarView: FC<{ isInRoom: boolean }> = props =>
@@ -15,7 +15,10 @@ export const ToolbarView: FC<{ isInRoom: boolean }> = props =>
     const { getTotalUnseen = 0 } = useAchievements();
     const { requests = [] } = useFriends();
     const { iconState = MessengerIconState.HIDDEN } = useMessenger();
+    const { unreadCount: inboxUnread = 0 } = useInbox();
     const isMod = GetSessionDataManager().isModerator;
+    // Mod tool is admin-only (Admin role = security level 6 in this hotel; Moderator = 5).
+    const isAdmin = GetSessionDataManager().securityLevel >= 6;
     
     useMessageEvent<PerkAllowancesMessageEvent>(PerkAllowancesMessageEvent, event =>
     {
@@ -83,13 +86,19 @@ export const ToolbarView: FC<{ isInRoom: boolean }> = props =>
                         <Base pointer className="navigation-item icon icon-rooms" onClick={ event => CreateLinkEvent('navigator/toggle') } />
                         { GetConfiguration('game.center.enabled') && <Base pointer className="navigation-item icon icon-game" onClick={ event => CreateLinkEvent('games/toggle') } /> }
                         <Base pointer className="navigation-item icon icon-catalog" onClick={ event => CreateLinkEvent('catalog/toggle') } />
+                        <Base pointer className="navigation-item icon icon-marketplace" onClick={ event => CreateLinkEvent('marketplace/toggle') } />
+                        <Base pointer className="navigation-item icon icon-inbox" onClick={ event => CreateLinkEvent('inbox/toggle') }>
+                            { (inboxUnread > 0) &&
+                                <LayoutItemCountView count={ inboxUnread } /> }
+                        </Base>
+                        <Base pointer className="navigation-item icon icon-wheel" onClick={ event => CreateLinkEvent('wheel/toggle') } />
+                        <Base pointer className="navigation-item icon icon-quests" onClick={ event => CreateLinkEvent('quests/toggle') } />
                         <Base pointer className="navigation-item icon icon-inventory" onClick={ event => CreateLinkEvent('inventory/toggle') }>
                             { (getFullCount > 0) &&
                                 <LayoutItemCountView count={ getFullCount } /> }
                         </Base>
-                        { isInRoom &&
-                            <Base pointer className="navigation-item icon icon-camera" onClick={ event => CreateLinkEvent('camera/toggle') } /> }
-                        { isMod &&
+                        <Base pointer className="navigation-item icon icon-help-q" onClick={ event => CreateLinkEvent('help/show') } />
+                        { isAdmin &&
                             <Base pointer className="navigation-item icon icon-modtools" onClick={ event => CreateLinkEvent('mod-tools/toggle') } /> }
                     </Flex>
                     <Flex alignItems="center" id="toolbar-chat-input-container" />

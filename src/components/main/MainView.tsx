@@ -8,6 +8,11 @@ import { AvatarEditorView } from '../avatar-editor/AvatarEditorView';
 import { CameraWidgetView } from '../camera/CameraWidgetView';
 import { CampaignView } from '../campaign/CampaignView';
 import { CatalogView } from '../catalog/CatalogView';
+import { MarketplaceView } from '../marketplace/MarketplaceView';
+import { InboxView } from '../marketplace/InboxView';
+import { WheelView } from '../marketplace/WheelView';
+import { DailyQuestsView } from '../marketplace/DailyQuestsView';
+import { EffectsView } from '../marketplace/EffectsView';
 import { ChatHistoryView } from '../chat-history/ChatHistoryView';
 import { FloorplanEditorView } from '../floorplan-editor/FloorplanEditorView';
 import { FriendsView } from '../friends/FriendsView';
@@ -93,6 +98,11 @@ export const MainView: FC<{}> = props =>
             <AchievementsView />
             <NavigatorView />
             <InventoryView />
+            <MarketplaceView />
+            <InboxView />
+            <WheelView />
+            <DailyQuestsView />
+            <EffectsView />
             <CatalogView />
             <FriendsView />
             <RightSideView />

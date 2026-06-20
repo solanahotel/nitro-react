@@ -10,6 +10,7 @@ export * from './game-center';
 export * from './groups';
 export * from './help';
 export * from './inventory';
+export * from './marketplace';
 export * from './mod-tools';
 export * from './navigator';
 export * from './notification';

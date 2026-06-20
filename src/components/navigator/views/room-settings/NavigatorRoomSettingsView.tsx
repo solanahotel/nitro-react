@@ -1,8 +1,8 @@
 import { RoomBannedUsersComposer, RoomDataParser, RoomSettingsDataEvent, SaveRoomSettingsComposer } from '@nitrots/nitro-renderer';
 import { FC, useState } from 'react';
-import { IRoomData, LocalizeText, SendMessageComposer } from '../../../../api';
+import { ClubStatus, GetSessionDataManager, IRoomData, LocalizeText, SendMessageComposer } from '../../../../api';
 import { NitroCardContentView, NitroCardHeaderView, NitroCardTabsItemView, NitroCardTabsView, NitroCardView } from '../../../../common';
-import { useMessageEvent } from '../../../../hooks';
+import { useMessageEvent, usePurse } from '../../../../hooks';
 import { NavigatorRoomSettingsAccessTabView } from './NavigatorRoomSettingsAccessTabView';
 import { NavigatorRoomSettingsBasicTabView } from './NavigatorRoomSettingsBasicTabView';
 import { NavigatorRoomSettingsModTabView } from './NavigatorRoomSettingsModTabView';
@@ -21,6 +21,12 @@ export const NavigatorRoomSettingsView: FC<{}> = props =>
 {
     const [ roomData, setRoomData ] = useState<IRoomData>(null);
     const [ currentTab, setCurrentTab ] = useState(TABS[0]);
+    const { clubStatus } = usePurse();
+
+    // SC (club) settings only for Solana Club members; the Mod tab only for staff/admins.
+    const isClub = clubStatus === ClubStatus.ACTIVE;
+    const isStaff = GetSessionDataManager().isModerator;
+    const visibleTabs = TABS.filter((tab, index) => (index !== 3 || isClub) && (index !== 4 || isStaff));
 
     useMessageEvent<RoomSettingsDataEvent>(RoomSettingsDataEvent, event =>
     {
@@ -184,7 +190,7 @@ export const NavigatorRoomSettingsView: FC<{}> = props =>
         <NitroCardView uniqueKey="nitro-room-settings" className="nitro-room-settings">
             <NitroCardHeaderView headerText={ LocalizeText('navigator.roomsettings') } onCloseClick={ onClose } />
             <NitroCardTabsView>
-                { TABS.map(tab =>
+                { visibleTabs.map(tab =>
                 {
                     return <NitroCardTabsItemView key={ tab } isActive={ (currentTab === tab) } onClick={ event => setCurrentTab(tab) }>{ LocalizeText(tab) }</NitroCardTabsItemView>
                 }) }
